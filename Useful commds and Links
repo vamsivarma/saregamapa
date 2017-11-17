@@ -1,0 +1,21 @@
+python -m pip install pymongo
+
+python --version 
+python -m pip list
+
+
+#For installing MongoDB on local machine
+#https://docs.mongodb.com/v2.8/tutorial/install-mongodb-on-windows/
+#https://www.mongodb.com/download-center#community - Downloads page
+
+#https://scalegrid.io/blog/getting-started-with-python-and-mongodb-2/ - setting up mongo DB in our local machine
+
+
+Using mongo db - 
+
+mongo --version - to check if mongo db is installed in the local machine
+mongod - to start the mongo data base server
+mongo - to run mongo commads
+
+
+show dbs - get the list of databases created in the mongo server
