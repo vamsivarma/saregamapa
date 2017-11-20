@@ -1,0 +1,14 @@
+#For using the songs_parsing.py
+
+1. Create a folder inside saregamapa folder with name songs_complete and copy the extracted folder given by aris in to this folder(even the sub folders)
+
+2. Go to the command prompt and run "mongod" command to start the Mongo DB server
+
+3. Open a new command prompt and run "mongo" command to open mongo console. 
+	3.1 Switch to your DB by "use your_db_name" command
+	3.2 insert a new collection with the follwing command,
+		db.songs_100000.insert({"name":"placeholder_name","artist":"placeholder_artist
+"lyrics":"placeholder_lyrics" });
+		to create a placeholder for collection
+
+4. Now open saregamapa folder in the command prompt and run, python songs_parsing.py, all the required songs information in all the html files will be inserted in to songs_100000 collection that you created, this might take some time maybe around 45 minutes since there are around 87000 records that needs to be inserted in to DB 

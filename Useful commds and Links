@@ -1,4 +1,5 @@
 python -m pip install pymongo
+python -m pip install BeautifulSoup4
 
 python --version 
 python -m pip list
@@ -19,3 +20,26 @@ mongo - to run mongo commads
 
 
 show dbs - get the list of databases created in the mongo server
+
+
+#Useful links for web scrapping
+
+https://www.dataquest.io/blog/web-scraping-tutorial-python/
+
+https://www.digitalocean.com/community/tutorials/how-to-scrape-web-pages-with-beautiful-soup-and-python-3
+
+http://docs.python-guide.org/en/latest/scenarios/scrape/
+
+http://www.gregreda.com/2013/03/03/web-scraping-101-with-python/
+
+https://scrapy.org/ - Web scrapping framework
+
+https://www.analyticsvidhya.com/blog/2015/10/beginner-guide-web-scraping-beautiful-soup-python/
+
+https://www.analyticsvidhya.com/blog/2017/07/web-scraping-in-python-using-scrapy/
+
+
+#To install scrapy - 
+conda install -c conda-forge scrapy
+
+

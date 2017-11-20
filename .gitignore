@@ -99,3 +99,9 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+#For ignoring songs html files
+songs/
+songs_complete/
+song_subset/
