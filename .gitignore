@@ -104,4 +104,5 @@ ENV/
 #For ignoring songs html files
 songs/
 songs_complete/
-song_subset/
+songs_subset/
+songs_1000/

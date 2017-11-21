@@ -21,6 +21,12 @@ mongo - to run mongo commads
 
 show dbs - get the list of databases created in the mongo server
 
+db.collection_name.drop()
+
+#Reference links for Mongo DB
+https://docs.mongodb.com/manual/reference/method/db.collection.remove/
+
+
 
 #Useful links for web scrapping
 
@@ -41,5 +47,9 @@ https://www.analyticsvidhya.com/blog/2017/07/web-scraping-in-python-using-scrapy
 
 #To install scrapy - 
 conda install -c conda-forge scrapy
+
+
+#Useful resources for histograms - 
+https://plot.ly/matplotlib/histograms/
 
 
