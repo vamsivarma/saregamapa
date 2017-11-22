@@ -26,6 +26,17 @@ db.collection_name.drop()
 #Reference links for Mongo DB
 https://docs.mongodb.com/manual/reference/method/db.collection.remove/
 
+https://realpython.com/blog/python/introduction-to-mongodb-and-python/ - Very useful resource for PyMongo
+
+http://api.mongodb.com/python/current/tutorial.html
+
+https://docs.mongodb.com/manual/indexes/ - Indexing using Mongo DB
+
+#Pymongo commands - 
+client.database_names()
+db.collection_names()
+db.mydb.find_one() - First document of a given collection
+db.collection_names(include_system_collections=False)
 
 
 #Useful links for web scrapping
@@ -51,5 +62,15 @@ conda install -c conda-forge scrapy
 
 #Useful resources for histograms - 
 https://plot.ly/matplotlib/histograms/
+
+
+http://api.mongodb.com/python/current/tutorial.html
+https://docs.mongodb.com/manual/indexes/
+https://code.tutsplus.com/tutorials/full-text-search-in-mongodb--cms-24835
+https://www.mongodb.com/blog/post/integrating-mongodb-text-search-with-a-python-app
+
+
+#Python Jupiter Notebooks
+http://localhost:8888/notebooks/COSINE.ipynb
 
 
