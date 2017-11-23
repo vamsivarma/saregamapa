@@ -26,8 +26,14 @@ class Saregamapa_Parse:
     folder_name = ""
     
     def get_song_lyrics(self, lyric):
+        
+        #print(lyric)
+        
+        
         # let's clean the lyric using RegexpTokenizer from nltk.tokenize
         tokenizer = RegexpTokenizer(r'\w+')
+        
+        #lyric = lyric.strip().replace("\t", " ").replace("\r", " ").replace('\n', ' ')
         
         #Remove punctuation
         lyric = ' '.join(tokenizer.tokenize(lyric))
@@ -39,7 +45,7 @@ class Saregamapa_Parse:
     
     def remove_stopwords(self, s):
         
-        return  "  ".join([word for word in s.split() if word not in stopwords.words('english')])   
+        return  " ".join([word for word in s.split() if word not in stopwords.words('english')])   
     
     def get_song_url(self, htmlpage):
         url = ''
@@ -90,7 +96,7 @@ class Saregamapa_Parse:
                 song_dict['url'] = self.get_song_url(song_page)
         
                 if content is not None:
-                    song_dict['lyrics']  = self.get_song_lyrics(content.text)
+                    song_dict['lyrics']  = self.get_song_lyrics(content.get_text(separator=' '))
                     song_dict['word_count'] = len(song_dict['lyrics'].split()) 
         
                 self.songs_list.append(song_dict)        
@@ -99,7 +105,7 @@ class Saregamapa_Parse:
         
             f.close()
         
-        smongo.save(self.songs_collection, self.songs_list)
+        #smongo.save(self.songs_collection, self.songs_list)
         
             
     def save_artists(self): 
@@ -117,7 +123,7 @@ class Saregamapa_Parse:
             self.artist_dict_list.append(artist_dict)
         
 
-        smongo.save(self.artist_collection, self.artist_dict_list)
+        #smongo.save(self.artist_collection, self.artist_dict_list)
 
 
     def __init__(self, pObj):
@@ -134,11 +140,11 @@ class Saregamapa_Parse:
 parse_dict = {
             "songs_collection": "songs_1000",
             "artist_collection": "artists_map_1000",
-            "folder_name": "\songs_1000"
+            "folder_name": "\songs_sample"
         }
 
 sp = Saregamapa_Parse(parse_dict)
 
-sv.Saregamapa_Visualize(sp.songs_list, sp.artist_map)
+#sv.Saregamapa_Visualize(sp.songs_list, sp.artist_map)
 
 si.Saregamapa_Indexdata(sp.songs_list)
