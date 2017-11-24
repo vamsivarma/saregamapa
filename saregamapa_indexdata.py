@@ -84,7 +84,7 @@ class Saregamapa_Indexdata:
     
     def search_complete(self, diz):
         
-        print("Inside search complete")
+        #print("Inside search complete")
         ###return all the songs that contain all the query terms
         q = "love"
         #ask query
@@ -108,7 +108,7 @@ class Saregamapa_Indexdata:
                 break
             else:
                 intersect = set(intersect).intersection(diz_intersect[q[i]])
-        print(intersect)
+        #print(intersect)
         
         return intersect
         
@@ -141,7 +141,7 @@ class Saregamapa_Indexdata:
             #print(l)
             data.append(l)
         
-        print(data)
+        #print(data)
         return data
     
     def cluster_documents(self, data, intersect):
@@ -155,9 +155,9 @@ class Saregamapa_Indexdata:
         kmeans.fit(data) # actual execution
         c = kmeans.predict(data)
         #print(c.shape)
-        print(c)
-        for i in range(len(intersect)):
-            print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
+        #print(c)
+        #for i in range(len(intersect)):
+            #print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
         #we could try it more times to see the best solution, since it isn't optimal
         
         return c
@@ -171,20 +171,15 @@ class Saregamapa_Indexdata:
                 cluster_diz[c[i]].append(list(intersect)[i])
             else:
                 cluster_diz[c[i]] = [list(intersect)[i]]
-        print(cluster_diz)
+        #print(cluster_diz)
         for cluster in cluster_diz.keys():
             strg_cloud = " "
             for doc in cluster_diz[cluster]:
                 strg_cloud += self.all_lyrics[doc-1] + " "
             
-            print("String Cloud data")
-            #print(strg_cloud)
+            #strg_cloud = ' '.join(strg_cloud.split())
             
-            strg_cloud = ' '.join(strg_cloud.split())
-            
-            print(strg_cloud.split())
-            
-            wordcloud = WordCloud(width = 480, height = 480, margin = 0).generate(strg_cloud)
+            wordcloud = WordCloud(width = 480, height = 480, margin = 0, collocations=False).generate(strg_cloud)
             plt.title("Cluster number: "+str(cluster))
             plt.imshow(wordcloud, interpolation = "bilinear")
             plt.axis("off")

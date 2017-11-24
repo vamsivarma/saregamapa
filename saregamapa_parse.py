@@ -25,15 +25,10 @@ class Saregamapa_Parse:
     artist_collection = ""
     folder_name = ""
     
-    def get_song_lyrics(self, lyric):
-        
-        #print(lyric)
-        
+    def get_song_lyrics(self, lyric): 
         
         # let's clean the lyric using RegexpTokenizer from nltk.tokenize
         tokenizer = RegexpTokenizer(r'\w+')
-        
-        #lyric = lyric.strip().replace("\t", " ").replace("\r", " ").replace('\n', ' ')
         
         #Remove punctuation
         lyric = ' '.join(tokenizer.tokenize(lyric))
@@ -69,7 +64,6 @@ class Saregamapa_Parse:
             contents = f.read()
             if(len(contents) != 0):
         
-                #content_counter += 1
                 song_page = BeautifulSoup(contents, "lxml")
         
                 song_dict = {
@@ -140,7 +134,7 @@ class Saregamapa_Parse:
 parse_dict = {
             "songs_collection": "songs_1000",
             "artist_collection": "artists_map_1000",
-            "folder_name": "\songs_sample"
+            "folder_name": "\songs_1000"
         }
 
 sp = Saregamapa_Parse(parse_dict)
