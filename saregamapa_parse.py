@@ -14,6 +14,21 @@ nltk.download('stopwords')
 
 smongo = sm.Saregamapa_Mongo("saregamapa") 
 
+
+
+parse_dict = {
+            "songs_collection": "songs_1000",
+            "artist_collection": "artists_map_1000",
+            "folder_name": "\songs_1000"
+        }
+
+smeta = {
+            "songs_list": [],
+            "artist_dict_list": []
+            } 
+
+collection_list = smongo.get_db_collections()
+
 class Saregamapa_Parse:
 
     #@TODO: Need to initialize this with no of records already existing
@@ -55,7 +70,7 @@ class Saregamapa_Parse:
     def get_songs_data(self):
         
         self.songs_list = []
-        page_index = 0 # Need to set this to current number of records existing in the collection
+        page_index = 1 # Need to set this to current number of records existing in the collection
         path = r'' + os.getcwd()  + self.folder_name
         
         for name in os.listdir( path ):
@@ -77,7 +92,10 @@ class Saregamapa_Parse:
         
                 content = song_page.find('div', {"id":"content_h"})
                 song_object = song_page.title.text.split(' - ')
-                artistName = song_object[1]
+                
+                artistName = ''
+                if(len(song_object) > 1):
+                    artistName = song_object[1]    
                 
                 if artistName in self.artist_map:
                     self.artist_map[artistName] += 1
@@ -92,14 +110,14 @@ class Saregamapa_Parse:
                 if content is not None:
                     song_dict['lyrics']  = self.get_song_lyrics(content.get_text(separator=' '))
                     song_dict['word_count'] = len(song_dict['lyrics'].split()) 
-        
-                self.songs_list.append(song_dict)        
-                
-                page_index += 1
+                    
+                    if song_dict['title'] != '' and song_dict['artist'] != '': 
+                        self.songs_list.append(song_dict)  
+                        page_index += 1
         
             f.close()
         
-        #smongo.save(self.songs_collection, self.songs_list)
+        smongo.save(self.songs_collection, self.songs_list)
         
             
     def save_artists(self): 
@@ -116,8 +134,7 @@ class Saregamapa_Parse:
             
             self.artist_dict_list.append(artist_dict)
         
-
-        #smongo.save(self.artist_collection, self.artist_dict_list)
+        smongo.save(self.artist_collection, self.artist_dict_list)
 
 
     def __init__(self, pObj):
@@ -128,17 +145,21 @@ class Saregamapa_Parse:
         
         self.get_songs_data() 
         self.save_artists()
+        
+
+if(parse_dict["songs_collection"] not in collection_list):
+    sp = Saregamapa_Parse(parse_dict)
+    smeta["songs_list"] = sp.songs_list
+    smeta["artist_dict_list"] = sp.artist_dict_list    
+    
+else:
+    smeta["songs_list"] = smongo.get(parse_dict["songs_collection"])
+    smeta["artist_dict_list"] = smongo.get(parse_dict["artist_collection"])
+    
+    
+sv.Saregamapa_Visualize(smeta["songs_list"], smeta["artist_dict_list"])
+
+si.Saregamapa_Indexdata(smeta["songs_list"])
 
 
 
-parse_dict = {
-            "songs_collection": "songs_1000",
-            "artist_collection": "artists_map_1000",
-            "folder_name": "\songs_1000"
-        }
-
-sp = Saregamapa_Parse(parse_dict)
-
-#sv.Saregamapa_Visualize(sp.songs_list, sp.artist_map)
-
-si.Saregamapa_Indexdata(sp.songs_list)

@@ -112,12 +112,23 @@ class Saregamapa_Visualize():
         for song in self.songs_list:
             wordCountDict[song['title']] = len(song['lyrics'])
         
-        self.plot_songs_lengths_histogram(wordCountDict)   
+        self.plot_songs_lengths_histogram(wordCountDict)
     
-    def __init__(self, songs_list, artist_map):
+    def get_artist_map(self, artist_list):
+        
+        a_map = {}
+        
+        
+        for artist in artist_list:
+            a_map[artist["artist_name"]] =  artist["songs_count"]   
+        
+        return a_map
+        
+
+    def __init__(self, songs_list, artist_list):
         
         self.songs_list = songs_list
-        self.artist_map = artist_map
+        self.artist_map = self.get_artist_map(artist_list)
 
         self.draw_artists_histogram()
         

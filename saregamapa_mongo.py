@@ -13,9 +13,18 @@ class Saregamapa_Mongo:
     
     
     def get(self, cName):
-        return self.db[cName].find()
+        
+        data = list(self.db[cName].find({}))
+        result = []
+        
+        for d in data:
+            result.append(d)
+        
+        return result
     
-              
+    def get_db_collections(self):
+        return self.db.collection_names(include_system_collections=False)
+          
     def __init__(self, dbName):
         connection = MongoClient('localhost',27017)
         self.db = connection[dbName]
