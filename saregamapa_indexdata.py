@@ -5,224 +5,66 @@ Created on Tue Nov 21 17:38:54 2017
 """
 
 import math
-import heapq
-from sklearn.cluster import KMeans
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
+from nltk.tokenize import RegexpTokenizer
 
 class Saregamapa_Indexdata:
     
-    songs_list = []
-    all_lyrics = []
+    documents_meta = []
+    
+    def insert_doc_index(self, doc, char):
+        return [doc[0], doc[1].split().count(char), doc[2], doc[3], doc[4]]
+    
+    def returnCleanKey(self, word):
+        #tokenizer = RegexpTokenizer('[^A-Za-z0-9]+')
+        #word = ''.join(tokenizer.tokenize(word)) 
+        
+        #tokenizer = RegexpTokenizer(r'\w+')
+        #word = ''.join(tokenizer.tokenize(word))
+        
+        word = word.replace(".", "")
+        word = word.replace("$", "")
+        word = word.replace(" ", "")
+        
+        return word
         
     def default_invertedindex(self):
         diz={}
-        Id = 1
         
-        for s in self.all_lyrics:
-            #print(s)    
-            for char in set(s.split()):
-                if char not in diz:
-                    diz[char] = [[Id,s.split().count(char)]]
-                else:
-                    diz[char].append([Id,s.split().count(char)])
-            Id += 1
-            
+        for doc in self.documents_meta:
+            print(doc)    
+            for char in set(doc[1].split()):
+                
+                char = self.returnCleanKey(char)
+                
+                if char:
+                    if char not in diz:
+                        diz[char] = [self.insert_doc_index(doc, char)]
+                    else:
+                        diz[char].append(self.insert_doc_index(doc, char))
+        
+        #print(len(diz.keys()))            
         return diz
     
     def advanced_invertedindex(self, diz):
         
         diz_tf_idf = diz
-        for word in diz_tf_idf.values():
-            idf= math.log10(len(self.all_lyrics)/len(word))
+        for key, word in diz_tf_idf.items():
+            idf= math.log10(len(self.documents_meta)/len(word))
             for elem in word:
                 elem[1]=idf*elem[1]
-                
         return diz_tf_idf
-    
-    def apply_search(self, diz_tf_idf):
         
-        q = "love"
-        #q = input()
-        q = q.split()
-        diz_qcos = {}
-        diz_norm = {}
-        
-        for doc in range(1,len(self.all_lyrics)+1):
-            #numerator
-            num = 0
-            for word in q:
-                for i in range(len(diz_tf_idf[word])):
-                    if diz_tf_idf[word][i][0]==doc:
-                        num +=  diz_tf_idf[word][i][1]
-            diz_qcos[doc]=num
-            #denominator
-            norm = 0
-            for word in diz_tf_idf.values():
-                for i in range(len(word)):
-                    if word[i][0]==doc:
-                        norm +=  word[i][1]**2
-            diz_norm[doc]=math.sqrt(norm)
-        #print(diz_qcos)
-        #print(diz_norm)
-        for doc,num in diz_qcos.items():
-            if diz_norm[doc]!=0:
-                diz_qcos[doc] = num/(math.sqrt(len(q))*diz_norm[doc])
-        return diz_qcos
-        
+    def save_indexes(self, indexesDict, smongo, index_collection):
+        smongo.save_one(index_collection, indexesDict)
         
     
-    def apply_heap_toresults(self, diz_qcos):
-        
-        h = []
-        for elem in diz_qcos.keys():
-            heapq.heappush(h,(diz_qcos[elem], elem))
-        heapq._heapify_max(h)
-        for i in range(10):
-            print(heapq.heappop(h))
-            heapq._heapify_max(h)
-    
-    def search_complete(self, diz):
-        
-        #print("Inside search complete")
-        ###return all the songs that contain all the query terms
-        q = "love"
-        #ask query
-        #q = input("Insert query: ")
-        q = q.split()
-        #create a dictionary word of the query(key): in wich song it is in(value)
-        diz_intersect = {}
-        for query in q:
-            for word in diz.keys():
-                if query==word:
-                    for i in range(len(diz[word])):
-                        if query not in diz_intersect:
-                            diz_intersect[query] = [diz[word][i][0]]
-                        else:
-                            diz_intersect[query].append(diz[word][i][0])
-                            
-        #create a set of all the songs that contain all the query terms
-        intersect = diz_intersect[q[0]]
-        for i in range(1,len(q)):
-            if i == len(q):
-                break
-            else:
-                intersect = set(intersect).intersection(diz_intersect[q[i]])
-        #print(intersect)
-        
-        return intersect
-        
-    def normalize_results(self, intersect, diz_tf_idf):
-        #Normalize the vector
-        data = []
-        #for every document in the intersection create a list where every element(associated to a word) is it's tf-idf normalized
-        for doc in intersect:
-            #diz_normalized is a dictionary word(key): with it's tf-idf normalized(value)
-            diz_normalized = {}
-            #norm of the document: denominator
-            doc_norm = 0
-            for word in diz_tf_idf.keys():
-                for i in range(len(diz_tf_idf[word])):
-                    if doc == diz_tf_idf[word][i][0]:
-                        diz_normalized[word] = diz_tf_idf[word][i][1]
-                        doc_norm += diz_tf_idf[word][i][1]**2
-            #print(diz_normalized)
-            #print(doc_norm)
-            #create the vector desired and put it in a array
-            for w in diz_normalized.keys():
-                diz_normalized[w] = diz_normalized[w]/math.sqrt(doc_norm)
-            #print(diz_normalized)
-            l = []
-            for word in diz_tf_idf.keys():
-                if word in diz_normalized:
-                    l.append(diz_normalized[word])
-                else:
-                    l.append(0)
-            #print(l)
-            data.append(l)
-        
-        #print(data)
-        return data
-    
-    def cluster_documents(self, data, intersect):
-         
-        #HOW MANY CLUSTERS?
-        #k = int(input("How many clusters? "))
-        k = 2
-        
-        #use k-means to clusterize the songs
-        kmeans = KMeans(n_clusters=k, init='random') # initialization
-        kmeans.fit(data) # actual execution
-        c = kmeans.predict(data)
-        #print(c.shape)
-        #print(c)
-        #for i in range(len(intersect)):
-            #print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
-        #we could try it more times to see the best solution, since it isn't optimal
-        
-        return c
-    
-    def create_wordcloud(self, intersect, c):
-        
-        #word CLoud
-        cluster_diz = {}
-        for i in range(len(c)):
-            if c[i] in cluster_diz:
-                cluster_diz[c[i]].append(list(intersect)[i])
-            else:
-                cluster_diz[c[i]] = [list(intersect)[i]]
-        #print(cluster_diz)
-        for cluster in cluster_diz.keys():
-            strg_cloud = " "
-            for doc in cluster_diz[cluster]:
-                strg_cloud += self.all_lyrics[doc-1] + " "
-            
-            #strg_cloud = ' '.join(strg_cloud.split())
-            
-            wordcloud = WordCloud(width = 480, height = 480, margin = 0, collocations=False).generate(strg_cloud)
-            plt.title("Cluster number: "+str(cluster))
-            plt.imshow(wordcloud, interpolation = "bilinear")
-            plt.axis("off")
-            plt.margins(x=0,y=0)
-            plt.show()
-    
-    
-    def get_all_lyrics(self):
-        for song in self.songs_list:
-            self.all_lyrics.append(song['lyrics'])
-              
-    def __init__(self, songs_list):
-        
-        self.all_lyrics = []
-        self.songs_list = songs_list
-        self.get_all_lyrics()
-        
-        diz = self.default_invertedindex()
+    def __init__(self, smeta, smongo, index_collection):
+                
+        self.documents_meta = smeta["documents_meta"]
+
+        diz = self.default_invertedindex() 
         diz_tf_idf = self.advanced_invertedindex(diz)
-        diz_qcos = self.apply_search(diz_tf_idf)
-        self.apply_heap_toresults(diz_qcos)
         
-        intersect = self.search_complete(diz)
-        
-        n_doc = self.normalize_results(intersect, diz_tf_idf)
-        cluster = self.cluster_documents(n_doc, intersect)
-        
-        self.create_wordcloud(intersect, cluster)
-        
-      
-        
-'''
-f = 'ciao come stai ? Domani non vengo a scuola.'
-d = 'Non pensare agli altri ma a te stesso'
-e = 'Domani comportati bene'
-lista = []
-
-        
-
-
-get_all_lyrics()
-
-invoke_utilities()
-'''
-        
+        #print(diz_tf_idf)
+        self.save_indexes(diz_tf_idf, smongo, index_collection)
 

@@ -39,6 +39,8 @@ db.mydb.find_one() - First document of a given collection
 db.collection_names(include_system_collections=False)
 
 
+
+
 #Useful links for web scrapping
 
 https://www.dataquest.io/blog/web-scraping-tutorial-python/
@@ -77,3 +79,32 @@ http://localhost:8888/notebooks/COSINE.ipynb
 #Useful link for building Word Clouds using Python
 http://peekaboo-vision.blogspot.it/2012/11/a-wordcloud-in-python.html
 
+#Performance optimization Mongo DB
+https://stackoverflow.com/questions/9858393/limits-of-number-of-collections-in-databases
+
+
+https://stackoverflow.com/questions/5331549/what-is-the-maximum-number-of-parameters-passed-to-in-query-in-mongodb
+
+https://docs.mongodb.com/manual/reference/limits/
+
+http://api.mongodb.com/python/1.9/api/pymongo/cursor.html
+
+https://stackoverflow.com/questions/10424078/pymongo-cursor-iteration
+
+https://stackoverflow.com/users/496445/jdi
+
+http://mongoengine.org/
+
+https://github.com/MongoEngine/mongoengine
+
+https://stackoverflow.com/questions/11390427/how-to-iterate-a-mongo-cursor-in-a-loop-in-python
+
+https://stackoverflow.com/questions/6680659/pymongo-cursor-iteration
+
+https://stackoverflow.com/questions/28968660/how-to-convert-a-pymongo-cursor-cursor-into-a-dict
+
+https://stackoverflow.com/questions/26549787/how-to-check-if-a-pymongo-cursor-has-query-results
+
+https://stackoverflow.com/questions/25126447/what-is-the-default-batchsize-in-pymongo
+
+http://api.mongodb.com/python/current/tutorial.html#bulk-inserts

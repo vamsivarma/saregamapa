@@ -11,6 +11,10 @@ class Saregamapa_Mongo:
         #@TODO: If there are more records then insert 1000 records at a time
         cObj.insert_many(data)  
     
+    def save_one(self, cName, data): 
+        cObj = self.db[cName]
+        
+        cObj.insert_one(data)
     
     def get(self, cName):
         

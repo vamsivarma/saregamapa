@@ -1,0 +1,51 @@
+"""
+Created on Tue Nov 21 17:38:54 2017
+
+@author: Vamsi Varma
+"""
+
+from nltk.tokenize import RegexpTokenizer
+
+import nltk
+from nltk.corpus import stopwords
+nltk.download('stopwords')
+
+class Saregamapa_Common:
+    
+    common_message = ''
+     
+    def format_text(self, lyric): 
+        
+        # let's clean the lyric using RegexpTokenizer from nltk.tokenize
+        tokenizer = RegexpTokenizer(r'\w+')
+        
+        #Remove punctuation
+        lyric = ' '.join(tokenizer.tokenize(lyric))
+        
+        #Remove stopwords
+        lyric = self.remove_stopwords(lyric)
+    
+        return lyric
+    
+    def remove_stopwords(self, s):
+        
+        return  " ".join([word for word in s.split() if word not in stopwords.words('english')])
+    
+    
+    def get_documents_meta(self, songs_list):
+        documents_meta = []
+        for song in songs_list:
+            #Combine all the available strings for a song as one
+            #doc_string = song['title'] + ' ' +  song['artist'] + ' ' + song['lyrics']
+            doc_string = song['lyrics']
+            documents_meta.append([song['index'], doc_string, song['_id'], song['title'], song['url']])
+        
+        return documents_meta
+    
+    def __init__(self, s):
+        
+        self.common_message = s
+
+        
+        
+
