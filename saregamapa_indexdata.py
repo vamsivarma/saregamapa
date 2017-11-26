@@ -31,7 +31,7 @@ class Saregamapa_Indexdata:
         diz={}
         
         for doc in self.documents_meta:
-            print(doc)    
+            #print(doc)    
             for char in set(doc[1].split()):
                 
                 char = self.returnCleanKey(char)
@@ -54,11 +54,14 @@ class Saregamapa_Indexdata:
                 elem[1]=idf*elem[1]
         return diz_tf_idf
         
-    def save_indexes(self, indexesDict, smongo, index_collection):
-        smongo.save_one(index_collection, indexesDict)
+    def save_indexes(self, indexesDict, smongo, scommon, index_collection):
         
+        #Saving chunks of dictionaries with 1000 keys
+        for dictChunk in scommon.chunks(indexesDict, 1000):
+            smongo.save_one(index_collection, dictChunk)
+            
     
-    def __init__(self, smeta, smongo, index_collection):
+    def __init__(self, smeta, smongo, scommon, index_collection):
                 
         self.documents_meta = smeta["documents_meta"]
 
@@ -66,5 +69,5 @@ class Saregamapa_Indexdata:
         diz_tf_idf = self.advanced_invertedindex(diz)
         
         #print(diz_tf_idf)
-        self.save_indexes(diz_tf_idf, smongo, index_collection)
+        self.save_indexes(diz_tf_idf, smongo, scommon, index_collection)
 

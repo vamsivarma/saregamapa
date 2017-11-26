@@ -12,10 +12,10 @@ smongo = sm.Saregamapa_Mongo("saregamapa")
 
 
 parse_dict = {
-            "songs_collection": "songs_1000",
-            "artist_collection": "artists_map_1000",
-            "iindex_collection": "iindex_1000",
-            "folder_name": "\songs_1000"
+            "songs_collection": "songs_2000",
+            "artist_collection": "artists_map_2000",
+            "iindex_collection": "iindex_2000",
+            "folder_name": "\songs_2000"
         }
 
 smeta = {
@@ -145,7 +145,7 @@ smeta["documents_meta"] = scommon.get_documents_meta(smeta["songs_list"])
 
 
 if(parse_dict["iindex_collection"] not in collection_list):
-    si.Saregamapa_Indexdata(smeta, smongo, parse_dict["iindex_collection"])
+    si.Saregamapa_Indexdata(smeta, smongo, scommon, parse_dict["iindex_collection"])
 
 smeta["sindexes"] =  smongo.get(parse_dict["iindex_collection"])
 

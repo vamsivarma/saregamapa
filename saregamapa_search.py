@@ -166,15 +166,24 @@ class Saregamapa_Search:
             plt.margins(x=0,y=0)
             plt.show()
     
+    def get_document_indexes(self, indexesList):
+        
+        doc_indexes = {}
+        
+        for indexesDict in indexesList:
+            
+            indexesDict.pop('_id', None) 
+            doc_indexes.update(indexesDict)
+        
+        return doc_indexes
+            
               
     def __init__(self, smeta):
         
         self.smeta = smeta
         self.documents_meta = smeta["documents_meta"]
         
-        diz_tf_idf = smeta["sindexes"][0]
-        
-        diz_tf_idf.pop('_id', None)
+        diz_tf_idf = self.get_document_indexes(smeta["sindexes"])
         
         #print(diz_tf_idf)
                 

@@ -5,6 +5,7 @@ Created on Tue Nov 21 17:38:54 2017
 """
 
 from nltk.tokenize import RegexpTokenizer
+from itertools import islice
 
 import nltk
 from nltk.corpus import stopwords
@@ -41,6 +42,13 @@ class Saregamapa_Common:
             documents_meta.append([song['index'], doc_string, song['_id'], song['title'], song['url']])
         
         return documents_meta
+    
+    #Create cheunks of the big dictionary based on the size passed
+    def chunks(self, data, SIZE=10000):
+        it = iter(data)
+        
+        for i in range(0, len(data), SIZE):
+            yield {k:data[k] for k in islice(it, SIZE)}
     
     def __init__(self, s):
         
