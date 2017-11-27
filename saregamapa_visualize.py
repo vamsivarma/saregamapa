@@ -16,7 +16,7 @@ nltk.download('stopwords')
 class Saregamapa_Visualize():
     
     artist_map = {}
-    songs_list = []
+    songs_dict = {}
     
     def draw_artists_histogram(self):
         authors = sorted(self.artist_map.items(), key = operator.itemgetter(1), reverse = True)   
@@ -36,8 +36,8 @@ class Saregamapa_Visualize():
         
         #put all the lyrics in a list
         lyricsList = []
-        for song in self.songs_list:
-            lyricsList.append(song['lyrics'])
+        for songId in self.songs_dict:
+            lyricsList.append(self.songs_dict[songId][4])
             
         #for every song lyric
         for lyric in lyricsList:
@@ -100,8 +100,9 @@ class Saregamapa_Visualize():
     def song_word_count_with_out_repitition(self):
         
         wordCountDict = {} #length of the song without counting repetitions
-        for song in self.songs_list:
-            wordCountDict[song['title']]=len(set(song['lyrics']))
+        for songId in self.songs_dict:
+            curSong = self.songs_dict[songId]
+            wordCountDict[curSong[1]]=len(set(curSong[4]))
     
         self.plot_songs_lengths_histogram(wordCountDict)
     
@@ -109,8 +110,9 @@ class Saregamapa_Visualize():
     def song_word_count_with_repitition(self):
     
         wordCountDict = {} #length of the song without counting repetitions
-        for song in self.songs_list:
-            wordCountDict[song['title']] = len(song['lyrics'])
+        for songId in self.songs_dict:
+            curSong = self.songs_dict[songId]
+            wordCountDict[curSong[1]] = len(curSong[4])
         
         self.plot_songs_lengths_histogram(wordCountDict)
     
@@ -125,10 +127,10 @@ class Saregamapa_Visualize():
         return a_map
         
 
-    def __init__(self, songs_list, artist_list):
+    def __init__(self, smeta):
         
-        self.songs_list = songs_list
-        self.artist_map = self.get_artist_map(artist_list)
+        self.songs_dict = smeta["songs_dict"]
+        self.artist_map = self.get_artist_map(smeta["artist_dict_list"])
 
         self.draw_artists_histogram()
         

@@ -33,6 +33,7 @@ class Saregamapa_Common:
         return  " ".join([word for word in s.split() if word not in stopwords.words('english')])
     
     
+    #@TODO: Need to remove this function if not used
     def get_documents_meta(self, songs_list):
         documents_meta = []
         for song in songs_list:
@@ -42,6 +43,18 @@ class Saregamapa_Common:
             documents_meta.append([song['index'], doc_string, song['_id'], song['title'], song['url']])
         
         return documents_meta
+    
+    def generate_dict_fromlist(self, dict_list):
+        
+        dict_consolidated = {}
+        
+        for curDict in dict_list:
+            
+            curDict.pop('_id', None) 
+            dict_consolidated.update(curDict)
+        
+        return dict_consolidated
+    
     
     #Create cheunks of the big dictionary based on the size passed
     def chunks(self, data, SIZE=10000):

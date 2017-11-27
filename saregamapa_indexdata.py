@@ -9,10 +9,10 @@ from nltk.tokenize import RegexpTokenizer
 
 class Saregamapa_Indexdata:
     
-    documents_meta = []
+    songs_dict = {}
     
     def insert_doc_index(self, doc, char):
-        return [doc[0], doc[1].split().count(char), doc[2], doc[3], doc[4]]
+        return [doc[0], doc[4].split().count(char), doc[1], doc[2], doc[3]]
     
     def returnCleanKey(self, word):
         #tokenizer = RegexpTokenizer('[^A-Za-z0-9]+')
@@ -30,17 +30,19 @@ class Saregamapa_Indexdata:
     def default_invertedindex(self):
         diz={}
         
-        for doc in self.documents_meta:
-            #print(doc)    
-            for char in set(doc[1].split()):
+        for songId in self.songs_dict:
+            #print(doc)
+            curSong = self.songs_dict[songId]
+            
+            for char in set(curSong[4].split()):
                 
                 char = self.returnCleanKey(char)
                 
                 if char:
                     if char not in diz:
-                        diz[char] = [self.insert_doc_index(doc, char)]
+                        diz[char] = [self.insert_doc_index(curSong, char)]
                     else:
-                        diz[char].append(self.insert_doc_index(doc, char))
+                        diz[char].append(self.insert_doc_index(curSong, char))
         
         #print(len(diz.keys()))            
         return diz
@@ -49,7 +51,7 @@ class Saregamapa_Indexdata:
         
         diz_tf_idf = diz
         for key, word in diz_tf_idf.items():
-            idf= math.log10(len(self.documents_meta)/len(word))
+            idf= math.log10(len(self.songs_dict.keys())/len(word))
             for elem in word:
                 elem[1]=idf*elem[1]
         return diz_tf_idf
@@ -57,13 +59,13 @@ class Saregamapa_Indexdata:
     def save_indexes(self, indexesDict, smongo, scommon, index_collection):
         
         #Saving chunks of dictionaries with 1000 keys
-        for dictChunk in scommon.chunks(indexesDict, 1000):
+        for dictChunk in scommon.chunks(indexesDict, 1500):
             smongo.save_one(index_collection, dictChunk)
             
     
     def __init__(self, smeta, smongo, scommon, index_collection):
                 
-        self.documents_meta = smeta["documents_meta"]
+        self.songs_dict = smeta["songs_dict"]
 
         diz = self.default_invertedindex() 
         diz_tf_idf = self.advanced_invertedindex(diz)

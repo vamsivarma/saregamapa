@@ -108,3 +108,19 @@ https://stackoverflow.com/questions/26549787/how-to-check-if-a-pymongo-cursor-ha
 https://stackoverflow.com/questions/25126447/what-is-the-default-batchsize-in-pymongo
 
 http://api.mongodb.com/python/current/tutorial.html#bulk-inserts
+
+https://stackoverflow.com/questions/25553186/mongodb-and-pymongo-16mb-limit-on-document-size
+
+https://stackoverflow.com/questions/4667597/understanding-mongodb-bson-document-size-limit
+
+https://docs.mongodb.com/manual/reference/limits/
+
+https://stackoverflow.com/questions/22878743/how-to-split-dictionary-into-multiple-dictionaries-fast
+
+https://stackoverflow.com/questions/38987/how-to-merge-two-dictionaries-in-a-single-expression
+
+https://stackoverflow.com/questions/1781571/how-to-concatenate-two-dictionaries-to-create-a-new-one-in-python
+
+https://stackoverflow.com/questions/11011756/is-there-any-pythonic-way-to-combine-two-dicts-adding-values-for-keys-that-appe
+
+https://code.tutsplus.com/tutorials/how-to-merge-two-python-dictionaries--cms-26230

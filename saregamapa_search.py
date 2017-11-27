@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 class Saregamapa_Search:
     
     smeta = {}
-    documents_meta = []
+    songs_dict = {}
         
     def apply_search(self, diz_tf_idf):
         
@@ -25,7 +25,7 @@ class Saregamapa_Search:
         
         #print(q)
         
-        for doc in range(1,len(self.documents_meta)+1):
+        for doc in range(1,len(self.songs_dict.keys())+1):
             #numerator
             num = 0
             for word in q:
@@ -54,8 +54,8 @@ class Saregamapa_Search:
         
         h = []
         for elem in diz_qcos.keys():
-            curDoc = self.documents_meta[elem-1]
-            heapq.heappush(h,(diz_qcos[elem], curDoc[2], curDoc[3], curDoc[4]))
+            curDoc = self.songs_dict[str(elem)]
+            heapq.heappush(h,(diz_qcos[elem], curDoc[0], curDoc[1], curDoc[3]))
         
         heapq._heapify_max(h)
         for i in range(10):
@@ -155,7 +155,7 @@ class Saregamapa_Search:
         for cluster in cluster_diz.keys():
             strg_cloud = " "
             for doc in cluster_diz[cluster]:
-                strg_cloud += self.documents_meta[doc-1][1] + " "
+                strg_cloud += self.songs_dict[str(doc)][4] + " "
             
             #strg_cloud = ' '.join(strg_cloud.split())
             
@@ -164,26 +164,14 @@ class Saregamapa_Search:
             plt.imshow(wordcloud, interpolation = "bilinear")
             plt.axis("off")
             plt.margins(x=0,y=0)
-            plt.show()
-    
-    def get_document_indexes(self, indexesList):
-        
-        doc_indexes = {}
-        
-        for indexesDict in indexesList:
-            
-            indexesDict.pop('_id', None) 
-            doc_indexes.update(indexesDict)
-        
-        return doc_indexes
-            
+            plt.show()        
               
-    def __init__(self, smeta):
+    def __init__(self, smeta, scommon):
         
         self.smeta = smeta
-        self.documents_meta = smeta["documents_meta"]
+        self.songs_dict = smeta["songs_dict"]
         
-        diz_tf_idf = self.get_document_indexes(smeta["sindexes"])
+        diz_tf_idf = scommon.generate_dict_fromlist(smeta["sindexes"])
         
         #print(diz_tf_idf)
                 
