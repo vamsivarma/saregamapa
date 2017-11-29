@@ -18,9 +18,18 @@ function printWordCloud(result) {
 	alert(result)
 }
 
-window.onload = function() {
-	alert("On Page load")
-	sendRequest("http://localhost:8080/wordcloud", printWordCloud)
+function applySearch() {
+	var sQuery = document.getElementById("searchQuery").value;
+	alert(sQuery)
+	sendRequest("http://localhost:8080/search/" + sQuery, printSearchResults)
+}
 
-	sendRequest("http://localhost:8080/search", printSearchResults)	
+function wordCloud() {
+	var sQuery = document.getElementById("searchQuery").value;
+	alert(sQuery)
+	sendRequest("http://localhost:8080/wordcloud/" + sQuery, printSearchResults)	
+}
+
+window.onload = function() {
+	alert("On Page load")		
 }

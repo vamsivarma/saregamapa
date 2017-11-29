@@ -4,28 +4,36 @@ Created on Tue Nov 21 17:38:54 2017
 @author: Vamsi Varma
 """
 
+import operator
 import math
 from nltk.tokenize import RegexpTokenizer
+
 
 class Saregamapa_Indexdata:
     
     songs_dict = {}
     
-    def insert_doc_index(self, doc, char):
-        return [doc[0], doc[4].split().count(char), doc[1], doc[2], doc[3]]
+    chunk_size = 200
     
-    def returnCleanKey(self, word):
-        #tokenizer = RegexpTokenizer('[^A-Za-z0-9]+')
-        #word = ''.join(tokenizer.tokenize(word)) 
-        
-        #tokenizer = RegexpTokenizer(r'\w+')
-        #word = ''.join(tokenizer.tokenize(word))
-        
+    def insert_doc_index(self, doc, char):
+        return [doc[0], doc[4].split().count(char)]
+    
+    def returnCleanKey(self, word):        
         word = word.replace(".", "")
         word = word.replace("$", "")
         word = word.replace(" ", "")
         
         return word
+    
+    def invertLight(self, diz):
+        
+        for key in diz.keys():
+            diz[key] = sorted(diz[key], key=operator.itemgetter(1), reverse=True)
+            
+            if(len(diz[key]) > self.index_limit):
+                diz[key] = diz[key][:self.index_limit]    
+                
+        return diz
         
     def default_invertedindex(self):
         diz={}
@@ -43,9 +51,10 @@ class Saregamapa_Indexdata:
                         diz[char] = [self.insert_doc_index(curSong, char)]
                     else:
                         diz[char].append(self.insert_doc_index(curSong, char))
+                        
+        #print(len(diz.keys()))
         
-        #print(len(diz.keys()))            
-        return diz
+        return self.invertLight(diz)
     
     def advanced_invertedindex(self, diz):
         
@@ -58,14 +67,24 @@ class Saregamapa_Indexdata:
         
     def save_indexes(self, indexesDict, smongo, scommon, index_collection):
         
+        chunk_size = self.chunk_size
+        
+        dict_keys_count = len(indexesDict.keys())
+        
+        if(dict_keys_count < chunk_size):
+            chunk_size = dict_keys_count
+            
+        
         #Saving chunks of dictionaries with 1000 keys
-        for dictChunk in scommon.chunks(indexesDict, 1500):
+        for dictChunk in scommon.chunks(indexesDict, chunk_size):
             smongo.save_one(index_collection, dictChunk)
             
     
     def __init__(self, smeta, smongo, scommon, index_collection):
                 
         self.songs_dict = smeta["songs_dict"]
+        self.index_limit = smeta["index_limit"] 
+        self.chunk_size = smeta["chunk_size"] 
 
         diz = self.default_invertedindex() 
         diz_tf_idf = self.advanced_invertedindex(diz)

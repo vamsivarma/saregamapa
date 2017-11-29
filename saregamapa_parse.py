@@ -1,33 +1,6 @@
 import os
-import saregamapa_common as sc
-import saregamapa_indexdata as si
-import saregamapa_visualize as sv
-import saregamapa_search as ss
-import saregamapa_mongo as sm
 from bs4 import BeautifulSoup
 
-scommon = sc.Saregamapa_Common("Common Utilities")
-smongo = sm.Saregamapa_Mongo("saregamapa") 
-
-
-
-parse_dict = {
-            "songs_collection": "songs_2000",
-            "artist_collection": "artists_map_2000",
-            "iindex_collection": "iindex_2000",
-            "folder_name": "\songs_2000"
-        }
-
-smeta = {
-            "songs_dict": {},
-            "artist_dict_list": [],
-            "documents_meta": [],
-            "sindexes": [],
-            "sQuery": "love",
-            "clusters_count": 2
-            } 
-
-collection_list = smongo.get_db_collections()
 
 class Saregamapa_Parse:
 
@@ -38,19 +11,23 @@ class Saregamapa_Parse:
     
     songs_collection = ""
     artist_collection = ""
-    folder_name = ""   
+    folder_name = "" 
+    
+    chunk_size = 200
+    
+    max_records = 1
     
     def get_song_url(self, htmlpage):
         url = ''
     
         for link in htmlpage.find_all('a'):
             if link.get_text() == 'English':
-                url = 'https://www.azlyrics.com' + link.get('href') 
+                url = link.get('href') 
                 break
     
         return url
 
-    def save_songs_data(self):
+    def save_songs_data(self, smongo, scommon):
         
         self.songs_dict = {}
         path = r'' + os.getcwd()  + self.folder_name
@@ -103,13 +80,17 @@ class Saregamapa_Parse:
                         doc_index += 1
         
             f.close()
+            
+            if doc_index > self.max_records:
+                break
         
-        self.save_songs()
+        self.save_songs(smongo, scommon)
         
     
-    def save_songs(self):
+    def save_songs(self, smongo, scommon):
+       
+        chunk_size = self.chunk_size
         
-        chunk_size = 1500
         dict_keys_count = len(self.songs_dict.keys())
         
         if(dict_keys_count < chunk_size):
@@ -119,7 +100,7 @@ class Saregamapa_Parse:
         for songChunk in scommon.chunks(self.songs_dict, chunk_size):
             smongo.save_one(self.songs_collection, songChunk)
             
-    def save_artists(self): 
+    def save_artists(self, smongo): 
         
         self.artist_dict_list = []
         
@@ -136,43 +117,18 @@ class Saregamapa_Parse:
         smongo.save(self.artist_collection, self.artist_dict_list)
 
 
-    def __init__(self, pObj):
+    def __init__(self, pObj, smongo, scommon, smeta):
         
         self.songs_collection = pObj["songs_collection"]
         self.artist_collection = pObj["artist_collection"]
         self.folder_name = pObj["folder_name"]
         
-        self.save_songs_data() 
-        self.save_artists()
+        self.max_records = pObj["max_records"]
+        self.chunk_size =  smeta["chunk_size"]
         
-if(parse_dict["songs_collection"] not in collection_list):
-    sp = Saregamapa_Parse(parse_dict)    
-
-smeta["songs_dict"] = scommon.generate_dict_fromlist(smongo.get(parse_dict["songs_collection"])) 
-smeta["artist_dict_list"] = smongo.get(parse_dict["artist_collection"])
-     
-#sv.Saregamapa_Visualize(smeta)
-
-if(parse_dict["iindex_collection"] not in collection_list):
-    si.Saregamapa_Indexdata(smeta, smongo, scommon, parse_dict["iindex_collection"])
-
-smeta["sindexes"] =  smongo.get(parse_dict["iindex_collection"])
-
-#Do search
-ss.Saregamapa_Search(smeta, scommon)
-
-
-'''    
-
-
-
-#print(len((smeta["sindexes"][0]).keys()))
-#print(smeta["sQuery"])
-
-
-'''
-
-
+        self.save_songs_data(smongo, scommon) 
+        self.save_artists(smongo)
+        
 
 
 
