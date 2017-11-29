@@ -53,7 +53,7 @@ class Saregamapa_Index:
         
         #Do search
         ssearch = ss.Saregamapa_Search(self.smeta)
-        return ssearch.search()
+        print(ssearch.search())
     
     def cluster_data(self, query):
         self.smeta["sQuery"] = query
@@ -73,7 +73,7 @@ class Saregamapa_Index:
         #self.visualize_data()
         self.do_indexing()
         
-        #self.apply_search("love")
+        self.apply_search("love")
         #self.cluster_data("love")
 
 

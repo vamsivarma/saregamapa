@@ -11,7 +11,8 @@ class Saregamapa_Search:
     
     smeta = {}
     songs_dict = {}
-        
+    
+    
     def apply_search(self, diz_tf_idf):
         
         q = self.smeta["sQuery"]
@@ -21,13 +22,23 @@ class Saregamapa_Search:
         diz_norm = {}
         
         #print(q)
+       
+        l = []
+        for word in q:
+            if word.lower() in diz_tf_idf.keys():#if the word exixsts
+                for i in set([e[0] for e in diz_tf_idf[word.lower()]]):
+                    l.append(i)
+                
         
-        for doc in range(1,len(self.songs_dict.keys())+1):
+        l = list(set(l))
+        
+        for doc in l:
             #numerator
+            #print(doc)
             num = 0
             for word in q:
                 for i in range(len(diz_tf_idf[word])):
-                    if diz_tf_idf[word][i][0]==doc:
+                    if diz_tf_idf[word][i][0]==doc: 
                         num +=  diz_tf_idf[word][i][1]
             diz_qcos[doc]=num
             
@@ -44,9 +55,8 @@ class Saregamapa_Search:
             if diz_norm[doc]!=0:
                 diz_qcos[doc] = num/(math.sqrt(len(q))*diz_norm[doc])
         return diz_qcos
-        
-        
-    
+               
+       
     def apply_heap_toresults(self, diz_qcos):
         
         h = []

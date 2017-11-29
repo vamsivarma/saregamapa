@@ -40,7 +40,7 @@ class Saregamapa_Cluster:
                 break
             else:
                 intersect = set(intersect).intersection(diz_intersect[q[i]])
-        #print(intersect)
+        print(intersect)
         
         return intersect
         
@@ -88,8 +88,8 @@ class Saregamapa_Cluster:
         c = kmeans.predict(data)
         #print(c.shape)
         #print(c)
-        #for i in range(len(intersect)):
-            #print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
+        for i in range(len(intersect)):
+            print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
         #we could try it more times to see the best solution, since it isn't optimal
         
         return c
