@@ -50,22 +50,30 @@ class Saregamapa_Search:
     def apply_heap_toresults(self, diz_qcos):
         
         h = []
+        results = []
         for elem in diz_qcos.keys():
             curDoc = self.songs_dict[str(elem)]
             heapq.heappush(h,(diz_qcos[elem], curDoc[0], curDoc[1], 'https://www.azlyrics.com' + curDoc[3]))
         
         heapq._heapify_max(h)
         for i in range(10):
-            print(heapq.heappop(h))
-            heapq._heapify_max(h)     
+            results.append(list(heapq.heappop(h)))
+            #print(heapq.heappop(h))
+            
+            heapq._heapify_max(h)
+        
+        return results
+    
+    def search(self):
+        
+        diz_qcos = self.apply_search(self.smeta["sindexes"])
+ 
+        return self.apply_heap_toresults(diz_qcos)
               
     def __init__(self, smeta):
         
         self.smeta = smeta
         self.songs_dict = smeta["songs_dict"]
-        diz_tf_idf = smeta["sindexes"]
-                
-        diz_qcos = self.apply_search(diz_tf_idf)
-        self.apply_heap_toresults(diz_qcos)           
+                   
         
 

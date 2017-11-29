@@ -6,7 +6,8 @@ Created on Mon Nov 27 15:21:38 2017
 """
 
 import web
-from saregamapa_searchindex import search_endpoint
+import saregamapa_index as si
+
 urls = (
     '/index', 'index',    
     '/search/(.*)', 'apply_search',
@@ -23,7 +24,7 @@ class apply_search:
     def GET(self, qs):
         output = {
                 'query': qs,
-                'parse_meta': search_endpoint()
+                'search_results': si.sIndex.apply_search(qs)
                 }
         return output
 
@@ -32,7 +33,7 @@ class generate_wordcloud:
         
         output = {
                 'query': qs,
-                'parse_meta': search_endpoint()
+                'parse_meta': si.sIndex.cluster_data(qs)
                 }
         
         return output
