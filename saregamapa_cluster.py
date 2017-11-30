@@ -40,7 +40,7 @@ class Saregamapa_Cluster:
                 break
             else:
                 intersect = set(intersect).intersection(diz_intersect[q[i]])
-        print(intersect)
+        print("Documents Intersection: ", intersect)
         
         return intersect
         
