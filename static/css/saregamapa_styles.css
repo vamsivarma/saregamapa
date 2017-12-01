@@ -205,4 +205,26 @@
   list-style: none;
 }
 
+#results-container .cluster-title-cls {
+  font-weight: bolder;
+  text-decoration: underline;
+  font-size: 24px;
+  margin: 50px 0px;
+  color: blueviolet;  
+}
+
+.cc-label {
+ font-weight: bolder;
+ font-size: 15px;
+}
+
+#saregamapa_cc {
+ width: 41px;
+ text-align: right;
+ margin-top: 20px;
+ margin-left: 15px;
+ margin-bottom: 20px;
+ font-weight: bolder;
+}
+
 

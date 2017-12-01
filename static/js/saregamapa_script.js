@@ -129,7 +129,7 @@ $(document).ready(function($) {
           type: 'GET',
           url: baseURL + apiPath,
           timeout: 1000000,
-          dataType: 'json',
+          //dataType: 'json',
           success: display_cluster_results.bind(this),
           error: handle_search_failure.bind(this)
         });
@@ -174,14 +174,14 @@ $(document).ready(function($) {
          for(var i=0; i < clusterResultsLen; i++) {
 
           var cur_cluster_data = clusterResults[i]
-           resultsHolderElem.append("<li><h3>Cluster " + i + "</h3></li>"); 
+           resultsHolderElem.append("<li><h3 class='cluster-title-cls'>Cluster Data " + i + " and Word Cloud:</h3></li>"); 
            resultsHolderElem.append("<ul id='cluster_" + i + "' ></ul>");
 
            var curClusterElem = resultsHolderElem.find("#cluster_" + i); 
 
-           render_songs(curClusterElem, cur_cluster_data);
+           curClusterElem.append("<li><img width='800px' height='500px' src='static/wordcloud/cluster_" + i + ".png' /></li>");
 
-           curClusterElem.append("<li><img width='300px' height='300px' src='static/wordcloud/cluster_" + i + "' /></li>");
+           render_songs(curClusterElem, cur_cluster_data);   
          }
        } 
 

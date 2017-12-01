@@ -39,7 +39,7 @@ class generate_wordcloud:
 
         gData = web.input()
         qs = gData['qs']
-        cc = gData['cc']
+        cc = int(gData['cc'])
         
         output = {
                 'query': qs,
@@ -47,7 +47,8 @@ class generate_wordcloud:
                 'cluster_results': si.sIndex.cluster_data(qs, cc)
                 }
         
-        return output
+        web.header('Content-Type', 'application/json')
+        return json.dumps(output)
 
 app = web.application(urls, globals())
 

@@ -62,7 +62,7 @@ class Saregamapa_Index:
                
         #Do Clustering
         scluster = scc.Saregamapa_Cluster(self.smeta)
-        print(scluster.cluster())
+        return scluster.cluster()
     
     def __init__(self):
         
@@ -75,7 +75,7 @@ class Saregamapa_Index:
         self.do_indexing()
         
         #self.apply_search("love")
-        self.cluster_data("love", 2)
+        #self.cluster_data("love", 2)
 
 
 #Starting point of the application        

@@ -108,3 +108,6 @@ songs_subset/
 songs_1000/
 songs_sample/
 songs_2000/
+images/*
+songs_10/*
+static/wordcloud/

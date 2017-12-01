@@ -98,7 +98,7 @@ class Saregamapa_Cluster:
     
     def insert_doc(self, doc_id):
         curDoc = self.songs_dict[str(doc_id)]
-        return [curDoc[0], curDoc[1], curDoc[3]]
+        return [curDoc[0], curDoc[0], curDoc[1], curDoc[3]]
     
     def create_wordcloud(self, intersect, c):
         
@@ -108,17 +108,18 @@ class Saregamapa_Cluster:
             cur_doc_id = list(intersect)[i]
             if c[i] in cluster_diz:
                 cluster_diz[c[i]].append(cur_doc_id)
-                self.cluster_results[i].append(self.insert_doc(cur_doc_id))
-            else:
-                self.cluster_results[i] = []
-                self.cluster_results[i] = self.insert_doc(cur_doc_id)
-                
+            else:              
                 cluster_diz[c[i]] = [cur_doc_id]
+        
+        for i in range(len(cluster_diz.keys())):
+            self.cluster_results.append([])    
         
         for cluster in cluster_diz.keys():
             strg_cloud = " "
+            
             for doc in cluster_diz[cluster]:
                 strg_cloud += self.songs_dict[str(doc)][4] + " "
+                self.cluster_results[int(cluster)].append(self.insert_doc(doc))
             
             #strg_cloud = ' '.join(strg_cloud.split())
             
