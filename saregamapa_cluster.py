@@ -13,6 +13,8 @@ class Saregamapa_Cluster:
     
     smeta = {}
     songs_dict = {}
+    
+    cluster_results = []
         
     def search_complete(self, diz):
         
@@ -40,7 +42,7 @@ class Saregamapa_Cluster:
                 break
             else:
                 intersect = set(intersect).intersection(diz_intersect[q[i]])
-        print("Documents Intersection: ", intersect)
+        #print("Documents Intersection: ", intersect)
         
         return intersect
         
@@ -88,22 +90,31 @@ class Saregamapa_Cluster:
         c = kmeans.predict(data)
         #print(c.shape)
         #print(c)
-        for i in range(len(intersect)):
-            print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
+        #for i in range(len(intersect)):
+        #    print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
         #we could try it more times to see the best solution, since it isn't optimal
         
         return c
+    
+    def insert_doc(self, doc_id):
+        curDoc = self.songs_dict[str(doc_id)]
+        return [curDoc[0], curDoc[1], curDoc[3]]
     
     def create_wordcloud(self, intersect, c):
         
         #word CLoud
         cluster_diz = {}
         for i in range(len(c)):
+            cur_doc_id = list(intersect)[i]
             if c[i] in cluster_diz:
-                cluster_diz[c[i]].append(list(intersect)[i])
+                cluster_diz[c[i]].append(cur_doc_id)
+                self.cluster_results[i].append(self.insert_doc(cur_doc_id))
             else:
-                cluster_diz[c[i]] = [list(intersect)[i]]
-        #print(cluster_diz)
+                self.cluster_results[i] = []
+                self.cluster_results[i] = self.insert_doc(cur_doc_id)
+                
+                cluster_diz[c[i]] = [cur_doc_id]
+        
         for cluster in cluster_diz.keys():
             strg_cloud = " "
             for doc in cluster_diz[cluster]:
@@ -111,23 +122,30 @@ class Saregamapa_Cluster:
             
             #strg_cloud = ' '.join(strg_cloud.split())
             
-            wordcloud = WordCloud(width = 480, height = 480, margin = 0, collocations=False).generate(strg_cloud)
-            plt.title("Cluster number: "+str(cluster))
+            wordcloud = WordCloud(width = 300, height = 300, margin = 0, collocations=False).generate(strg_cloud)
+            #plt.title("Cluster number: "+str(cluster))
             plt.imshow(wordcloud, interpolation = "bilinear")
             plt.axis("off")
             plt.margins(x=0,y=0)
-            plt.show()        
-              
-    def __init__(self, smeta):
+            plt.savefig("static/wordcloud/cluster_" + str(cluster))
+            #plt.show()     
+   
+    def cluster(self):
+        self.cluster_results = []
         
-        self.smeta = smeta
-        self.songs_dict = smeta["songs_dict"]
-        diz_tf_idf = smeta["sindexes"]
+        diz_tf_idf = self.smeta["sindexes"]
         
         intersect = self.search_complete(diz_tf_idf)
         n_doc = self.normalize_results(intersect, diz_tf_idf)
         cluster = self.cluster_documents(n_doc, intersect)
         self.create_wordcloud(intersect, cluster)
+        
+        return self.cluster_results
+          
+    def __init__(self, smeta):
+        
+        self.smeta = smeta
+        self.songs_dict = smeta["songs_dict"]
         
         
 

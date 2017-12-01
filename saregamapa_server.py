@@ -12,7 +12,7 @@ import saregamapa_index as si
 urls = (
     '/', 'saregamapa_ui',    
     '/search', 'apply_search',
-    '/wordcloud/', 'generate_wordcloud'
+    '/wordcloud', 'generate_wordcloud'
 )
 
 render = web.template.render('ui/')
@@ -35,13 +35,16 @@ class apply_search:
         return json.dumps(output)
 
 class generate_wordcloud:        
-    def POST(self):
+    def GET(self):
 
-        pData = web.data()
+        gData = web.input()
+        qs = gData['qs']
+        cc = gData['cc']
         
         output = {
-                'query': pData.qs,
-                'parse_meta': si.sIndex.cluster_data(qs)
+                'query': qs,
+                'cluster_count': cc, 
+                'cluster_results': si.sIndex.cluster_data(qs, cc)
                 }
         
         return output
