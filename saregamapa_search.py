@@ -63,7 +63,7 @@ class Saregamapa_Search:
         results = []
         for elem in diz_qcos.keys():
             curDoc = self.songs_dict[str(elem)]
-            heapq.heappush(h,(diz_qcos[elem], curDoc[0], curDoc[1], 'https://www.azlyrics.com' + curDoc[3]))
+            heapq.heappush(h,(diz_qcos[elem], curDoc[0], curDoc[1], curDoc[3]))
         
         heapq._heapify_max(h)
         for i in range(10):

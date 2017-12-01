@@ -7,6 +7,8 @@ $(document).ready(function($) {
     advancedSearchModule.initSearchModule(holderElem);
   }
 
+
+
  });  
   
 
@@ -100,6 +102,20 @@ $(document).ready(function($) {
       });
 
     }
+
+    function format_song_url(url) {
+      var fixed_part = 'https://www.azlyrics.com/lyrics/';
+
+      url = url.split("+").join("");
+      var urlArray = url.split("/");
+      var urlArrayLen = urlArray.length;
+      var lastPart = urlArray[urlArrayLen-1];
+      var lastPartAry = lastPart.split("_");
+
+      var variablePart = urlArray[2] + "/" + lastPartAry[0] + ".html";
+
+      return fixed_part + variablePart; 
+    }
       
     function display_results(response) {
 
@@ -120,7 +136,9 @@ $(document).ready(function($) {
 
            var cur_result = results[i]; 
            var song_name = cur_result[2]; 
-           var song_url = cur_result[3];
+           var song_url = format_song_url(cur_result[3]);
+
+
               
            searchResults += '<li>';
            searchResults +='<h3 class="ss-post-title"><a target="_blank" href="' + song_url + '">' + song_name + '</a></h3>';
