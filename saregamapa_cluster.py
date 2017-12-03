@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 
 class Saregamapa_Cluster:
     
+    isServer = True
     smeta = {}
     songs_dict = {}
     
@@ -42,7 +43,9 @@ class Saregamapa_Cluster:
                 break
             else:
                 intersect = set(intersect).intersection(diz_intersect[q[i]])
-        #print("Documents Intersection: ", intersect)
+        
+        if(self.isServer):        
+            print("Documents Intersection: ", intersect)
         
         return intersect
         
@@ -90,9 +93,11 @@ class Saregamapa_Cluster:
         c = kmeans.predict(data)
         #print(c.shape)
         #print(c)
-        #for i in range(len(intersect)):
-        #    print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
-        #we could try it more times to see the best solution, since it isn't optimal
+
+        if(self.isServer):
+            for i in range(len(intersect)):
+                print("song "+str(list(intersect)[i])+" is in cluster "+str(c[i]))
+            #we could try it more times to see the best solution, since it isn't optimal
         
         return c
     
@@ -129,7 +134,9 @@ class Saregamapa_Cluster:
             plt.axis("off")
             plt.margins(x=0,y=0)
             plt.savefig("static/wordcloud/cluster_" + str(cluster))
-            #plt.show()     
+
+            if(self.isServer):
+                plt.show()     
    
     def cluster(self):
         self.cluster_results = []
@@ -143,8 +150,9 @@ class Saregamapa_Cluster:
         
         return self.cluster_results
           
-    def __init__(self, smeta):
+    def __init__(self, smeta, isServer):
         
+        self.isServer = isServer
         self.smeta = smeta
         self.songs_dict = smeta["songs_dict"]
         

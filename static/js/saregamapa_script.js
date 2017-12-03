@@ -179,7 +179,7 @@ $(document).ready(function($) {
 
            var curClusterElem = resultsHolderElem.find("#cluster_" + i); 
 
-           curClusterElem.append("<li><img width='500px' height='200px' src='static/wordcloud/cluster_" + i + ".png' /></li>");
+           curClusterElem.append("<li><img width='800px' height='500px' src='static/wordcloud/cluster_" + i + ".png' /></li>");
 
            render_songs(curClusterElem, cur_cluster_data);   
          }

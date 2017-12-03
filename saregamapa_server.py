@@ -28,7 +28,7 @@ class apply_search:
 
         output = {
                 'query': queryString,
-                'search_results': si.sIndex.apply_search(queryString)
+                'search_results': si.sIndex.apply_search(queryString, False)
                 }
 
         web.header('Content-Type', 'application/json')
@@ -44,7 +44,7 @@ class generate_wordcloud:
         output = {
                 'query': qs,
                 'cluster_count': cc, 
-                'cluster_results': si.sIndex.cluster_data(qs, cc)
+                'cluster_results': si.sIndex.cluster_data(qs, cc, False)
                 }
         
         web.header('Content-Type', 'application/json')
