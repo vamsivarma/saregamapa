@@ -12,3 +12,5 @@
 		to create a placeholder for collection
 
 4. Now open saregamapa folder in the command prompt and run, python songs_parsing.py, all the required songs information in all the html files will be inserted in to songs_100000 collection that you created, this might take some time maybe around 45 minutes since there are around 87000 records that needs to be inserted in to DB 
+
+Added a new text here to test checkin from new computer
